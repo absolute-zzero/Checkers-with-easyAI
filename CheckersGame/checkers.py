@@ -1,5 +1,18 @@
-# [[file:checker.org::*questions][questions:1]]
-# !/usr/bin/env python3
+"""
+Group Members: Romari Bartley, Gerrel Bones, David Porter
+Date: 6/12/2022
+Project: #1
+Project Description: This code is for a simple and modified version
+                     of the board game checkers. The difference is
+that once there is a one move between two pieces, a piece is able
+to jump or skip over the other, whether ally or foe. In other words,
+there is no "killing" in this version of checkers since no piece is
+removed. Finally, the a player is considered to win the game if they
+are the first to have one of their pieces become king. This would also
+mean that there is no backward moves since the game ends after any
+player becomes king.
+"""
+
 from easyAI import TwoPlayerGame, Human_Player, AI_Player, Negamax
 from easyAI import solve_with_iterative_deepening
 import numpy as np
@@ -15,16 +28,19 @@ odd_row = [(i,j) for i in odd for j in even]
 black_squares = even_row + odd_row
 
 class Checker(TwoPlayerGame):
-
     def __init__(self, players):
+        """
+        initializes the class
+        Creates a blank board
+        Completes it by placing each piece in their initial positions
+        """
+
         self.players = players
         # self.board = np.arange(8 * 8).reshape(8,8)
 
         #####self.blank_board = np.full((8,8),['0'],dtype=str)
 
         self.blank_board = np.zeros((8,8), dtype=object)
-
-
 
         self.board = self.blank_board.copy()
         self.black_pieces = [
@@ -50,7 +66,7 @@ class Checker(TwoPlayerGame):
         self.current_player = 1  # player 1 starts.
 
     def possible_moves_on_white_turn(self):
-
+    # returns the possible moves for the white pieces
         table_pos = []
         old_new_piece_pos = []
 
@@ -100,6 +116,7 @@ class Checker(TwoPlayerGame):
         return table_pos
 
     def possible_moves_on_black_turn(self):
+    #returns the possible moves for the black pieces
         table_pos = []
         old_new_piece_pos = []
 
@@ -147,15 +164,14 @@ class Checker(TwoPlayerGame):
         return table_pos
 
     def possible_moves(self):
-        """
-        """
-
+    #checks the current player and returns a function that returns the possible moves for that player
         if self.current_player == 2:
             return self.possible_moves_on_black_turn()
         else:
             return self.possible_moves_on_white_turn()
 
     def get_piece_pos_from_table(self, table_pos):
+    #returns the current positions of the pieces on the board
         if self.current_player-1 == 0:
             x = np.where(table_pos == "W")
         elif self.current_player-1 == 1:
@@ -167,6 +183,7 @@ class Checker(TwoPlayerGame):
         return [(i,j) for i,j in zip(x[0], x[1])]
 
     def make_move(self, pos):
+    #assigning the new positions of the pieces as the current positions
 
         # empty list that will hold new positions
         new_p1_pos = []
@@ -185,56 +202,24 @@ class Checker(TwoPlayerGame):
         self.players[0].pos = new_p1_pos  #assigning new player positions for player 1
         self.players[1].pos = new_p2_pos  #assigning new player positions for player 2
 
-
-        """
-        assign pieces index of pos array to current player position.
-
-        parameters
-        -------
-        pos = position of all pieces on the (8 x 8) boards. type numpy array.
-
-        example of pos
-        [[0,B,0,B,0,B,0,B],
-         [B,0,B,0,B,0,B,0],
-         [0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0],
-         [0,W,0,W,0,W,0,W],
-         [W,0,W,0,W,0,W,0]]
-        ------
-        """
         pass
 
     def lose(self):
-        """
-        black lose if white piece is in black territory
-        white lose if black piece is in black territory
-        """
 
         for i in range(8):
-            if self.board[0,i]=="W": #checking to see if player 1 is in player 2's last row
-                #print("Player 1 is crowned KING")
-                #print("Player 1 wins!!")
+            if self.board[0,i]=="W": #checking to see if any white pieces are in the black territory
                 return True
-
         for i in range(8):
-            if self.board[7,i]=="B": #checking to see if player 2 is in player 1's last row
+            if self.board[7,i]=="B": #checking to see if any black pieces are in the white territory
                 return True
 
 
     def is_over(self):
-        """
-        game is over immediately when one player get one of its piece into opponent's territory.
-        """
-
+        #game is over if there are no possible moves or one of the players lose
         return (self.possible_moves() == []) or self.lose()
 
-        pass
 
     def show(self):
-        """
-        show 8*8 checker board.
-        """
 
         # board position before move
         board = self.blank_board.copy()
