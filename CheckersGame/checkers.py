@@ -229,7 +229,8 @@ class Checker(TwoPlayerGame):
             for x,y in p.pos:
                 board[x,y] = l
         print('\n')
-        print(board)
+        #print(board)
+        print(board.astype('str'))
 
 
     def scoring(self):
@@ -243,9 +244,9 @@ class Checker(TwoPlayerGame):
 
 
 if __name__ == "__main__":
-    ai = Negamax(1) #The AI will think 13 moves in advance
+    ai = Negamax(1)
     ai2 = Negamax(4)
-    game = Checker([AI_Player(ai), AI_Player(ai2)])
+    game = Checker([Human_Player(), AI_Player(ai)])
     history = game.play()
     if game.lose(): #congratulate opposite player since switch_player() was called
         if game.current_player==1:
