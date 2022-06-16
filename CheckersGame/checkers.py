@@ -1,5 +1,5 @@
 """
-Group Members: Romari Bartley, Gerrel Bones, David Porter
+Group Members: Romari Bartley, Gerrell Bones, David Porter
 Date: 6/12/2022
 Project: #1
 Project Description: This code is for a simple and modified version
